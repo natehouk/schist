@@ -2,7 +2,7 @@
 
 **A multiband compressor and expander with freely placed bands, for macOS, Windows and Linux (VST3 · AU · CLAP · VST2).**
 
-Part of **[Epsilon Audio](https://github.com/natehouk/epsilon-plugins)**, a family of free, open-source plugins: Monolith, Caldera, Obsidian, Strata, Basalt, Gneiss, Mica, Flint, Granite, Magma, Schist, Slate and Talc.
+Part of **[Epsilon Audio](https://github.com/natehouk/epsilon-plugins)**, a family of free, open-source plugins: Monolith, Caldera, Obsidian, Strata, Basalt, Gneiss, Mica, Flint, Granite, Magma, Schist, Slate, Talc and Geode.
 
 ![Schist](screenshot.png)
 
