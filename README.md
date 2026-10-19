@@ -6,7 +6,7 @@ Part of **[Epsilon Audio](https://github.com/natehouk/epsilon-plugins)**, a fami
 
 ![Schist](screenshot.png)
 
-Schist is a clean-room design with the feature set of FabFilter Pro-MB, FabFilter's eleventh plugin (October 2013). It was written from scratch, working only from FabFilter's public release announcement and contemporary reviews. No FabFilter code, binaries, presets, artwork or trademarks were used.
+Schist is a clean-room design with the feature set of FabFilter Pro-MB, FabFilter's thirteenth plugin (October 2013). It was written from scratch, working only from FabFilter's public release announcement and contemporary reviews. No FabFilter code, binaries, presets, artwork or trademarks were used.
 
 It is part of a family of plugins:
 - [Monolith](https://github.com/natehouk/monolith) (synth)
