@@ -256,7 +256,7 @@ protected:
         if (f == kBLo && openLo(v)) { snprintf(b, n, "Shelf"); return; }
         if (f == kBHi && openHi(v)) { snprintf(b, n, "Shelf"); return; }
         if (std::strcmp(d.unit, "Hz") == 0) { snprintf(b, n, "%s", fmtHz(v).c_str()); return; }
-        if (f == kBRatio) { snprintf(b, n, v >= 99.5f ? "100:1" : (v >= 10 ? "%.0f:1" : "%.1f:1"), v); return; }
+        if (f == kBRatio) { if (ratioIsInf(v)) snprintf(b, n, "Inf:1"); else snprintf(b, n, v >= 10 ? "%.0f:1" : "%.1f:1", v); return; }
         if (f == kBThreshold || f == kBKnee) { snprintf(b, n, "%.1f dB", v); return; }
         if (std::strcmp(d.unit, "dB") == 0) { snprintf(b, n, "%+.1f dB", v); return; }
         if (std::strcmp(d.unit, "ms") == 0) { if (v >= 1000) snprintf(b, n, "%.2f s", v / 1000); else snprintf(b, n, v < 1 ? "%.2f ms" : (v < 10 ? "%.1f ms" : "%.0f ms"), v); return; }
@@ -318,7 +318,7 @@ protected:
         beginPath(); circle(37, 26, 1.4f); fillColor(Color(0xf4, 0xf0, 0xe2)); fill();
         fontSize(22); textLetterSpacing(9); fillColor(C_TEXT); textAlign(ALIGN_LEFT | ALIGN_MIDDLE); text(56, 33, "SCHIST", nullptr);
         fontSize(9); textLetterSpacing(2.2f); fillColor(C_DIM); text(204, 28, "MULTIBAND DYNAMICS", nullptr);
-        fontSize(7); textLetterSpacing(1.1f); fillColor(C_FAINT); text(204, 40, "EPSILON AUDIO 1.0", nullptr);
+        fontSize(7); textLetterSpacing(1.1f); fillColor(C_FAINT); text(204, 40, "EPSILON AUDIO 2.0", nullptr);
         drawPresetBar();
         for (int k = 0; k < 2; ++k) {
             const float x = A_X + k * AB_W; const bool on = abSlot == k, hot = hoverHeader == 6 + k;
@@ -526,7 +526,11 @@ protected:
         textAlign(ALIGN_RIGHT | ALIGN_BOTTOM); text(TX + TS - 5, TY + TS - 4, "IN", nullptr);
         static const char* const kind[4] = { "DOWNWARD COMPRESSION", "UPWARD COMPRESSION", "DOWNWARD EXPANSION", "UPWARD EXPANSION" };
         fontSize(7.5f); textLetterSpacing(1.2f); textAlign(ALIGN_CENTER | ALIGN_TOP); fillColor(std::fabs(range) < 0.05f ? C_FAINT : C_DIM);
-        text(TX + TS / 2, TY + TS + 6, std::fabs(range) < 0.05f ? "RANGE 0: NO GAIN CHANGE" : kind[(md == kExpand ? 2 : 0) + (range > 0 ? 1 : 0)], nullptr);
+        const int ki = (md == kExpand ? 2 : 0) + (range > 0 ? 1 : 0);
+        const char* label = kind[ki];
+        if (ratioIsInf(ratio) && ki == 0) label = "LIMITING (INF:1)";        // the two classic extremes get their usual names
+        if (ratioIsInf(ratio) && ki == 2) label = "GATING (INF:1)";
+        text(TX + TS / 2, TY + TS + 6, std::fabs(range) < 0.05f ? "RANGE 0: NO GAIN CHANGE" : label, nullptr);
     }
     void drawGlobalPanel() {
         panel(GX, GY, GW, GH);

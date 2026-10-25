@@ -30,7 +30,7 @@ protected:
     const char* getMaker() const override { return "Epsilon Audio"; }
     const char* getHomePage() const override { return "https://epsilonrecords.com"; }
     const char* getLicense() const override { return "MIT"; }
-    uint32_t getVersion() const override { return d_version(1, 0, 0); }
+    uint32_t getVersion() const override { return d_version(2, 0, 0); }
 
     void initAudioPort(bool input, uint32_t index, AudioPort& port) override {
         if (input && index >= 2) {                 // inputs 3-4: external sidechain for the bands

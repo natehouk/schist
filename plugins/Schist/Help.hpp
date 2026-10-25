@@ -17,7 +17,7 @@ inline const char* paramTip(uint32_t p) {
     case kBMode: return "COMPRESS reduces the distance between loud and quiet. EXPAND increases it. Range decides whether the band works downward (negative) or upward (positive).";
     case kBThreshold: return "The level where the band starts to act. Above it a downward compressor turns the band down; below it an upward compressor turns it up, and a downward expander (gate) turns it down.";
     case kBRange: return "The most gain change the band may apply, and its direction. Negative values cut (downward compression or expansion), positive values boost (upward). Drag the band up or down in the display to change it.";
-    case kBRatio: return "How strongly the band reacts past the threshold. 2:1 halves the distance, 100:1 is close to a limiter (or, expanding, a hard gate).";
+    case kBRatio: return "How strongly the band reacts past the threshold. 2:1 halves the distance. All the way up is Inf:1: compressing, the band becomes a limiter (nothing passes the threshold); expanding, a gate (the full range applies the moment the level drops below it). Use a fast attack, and for limiting some lookahead.";
     case kBKnee: return "How gradually the band starts to act around the threshold. 0 dB is a hard corner; 30 dB eases in very gently.";
     case kBAttack: return "How fast the gain change moves away from 0 dB once the band starts working. Very low bands are kept a little slower automatically, so they don't distort.";
     case kBRelease: return "How fast the gain change returns. Release adapts to the material: short peaks recover faster than sustained compression.";

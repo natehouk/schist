@@ -60,6 +60,11 @@ inline void pianoTamer(E& e) { B(e, 0, 150, 600, -28, 2.5f, -6, 15, 180); B(e, 1
 inline void padWidener(E& e) { B(e, 0, 500, 30000, -40, 2, 6, 20, 300); ms(e, 0, kSide); }
 inline void guitarFizz(E& e) { B(e, 0, 4000, 9000, -34, 3, -8, 2, 90); slope(e, 0, 30); }
 // ---- Repair
+// 2.0: limiting (compress at Inf:1, fast attack, look-ahead) and gating (expand at Inf:1)
+inline void bandLimiter(E& e) { B(e, 0, 10, 120, -18, 100, -24, 0.5f, 80, 2); slope(e, 0, 24); la(e, 0, 5); B(e, 1, 120, 2500, -14, 100, -24, 0.5f, 60, 2); slope(e, 1, 24); la(e, 1, 5);
+                                B(e, 2, 2500, 30000, -20, 100, -24, 0.2f, 40, 2); slope(e, 2, 24); la(e, 2, 5); }
+inline void drumGate(E& e) { B(e, 0, 10, 200, -42, 100, -40, 0.1f, 90, 0); expand(e, 0); slope(e, 0, 48); B(e, 1, 200, 5000, -40, 100, -30, 0.1f, 70, 0); expand(e, 1); slope(e, 1, 48);
+                             B(e, 2, 5000, 30000, -46, 100, -24, 0.1f, 50, 0); expand(e, 2); slope(e, 2, 48); }
 inline void humGate(E& e) { B(e, 0, 40, 140, -55, 6, -24, 1, 80); expand(e, 0); slope(e, 0, 48); }
 inline void hissGate(E& e) { B(e, 0, 5000, 30000, -60, 4, -18, 1, 120); expand(e, 0); }
 inline void resonanceSnuff(E& e) { B(e, 0, 280, 340, -36, 6, -12, 2, 80); slope(e, 0, 48); }
@@ -91,6 +96,8 @@ static const PresetDef kPresetDefs[] = {
     { "Rumble Control", "Repair", pre::rumbleControl }, { "Sibilance (Side)", "Repair", pre::sibilanceSide },
     { "Pumping Lows", "Creative", pre::pumpingLows }, { "Transient Shaper", "Creative", pre::transientShaper }, { "Reverse Dynamics", "Creative", pre::reverseDynamics },
     { "Spectral Gate", "Creative", pre::spectralGate }, { "Side Bloom", "Creative", pre::sideBloom }, { "Hats From Kick", "Creative", pre::hatsFromKick },
+    // 2.0 (appended, so the program numbers of the presets above stay the same)
+    { "Three-Band Limiter", "Mastering", pre::bandLimiter }, { "Multiband Drum Gate", "Drums", pre::drumGate },
 };
 static constexpr uint32_t kNumPresets = sizeof(kPresetDefs) / sizeof(kPresetDefs[0]);
 

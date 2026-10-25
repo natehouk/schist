@@ -1,4 +1,4 @@
-# Schist 1.0 — User Manual
+# Schist 2.0 — User Manual
 
 Schist is a multiband dynamics processor. You place up to six bands anywhere in the spectrum, with gaps between them or snapped together like a classic crossover. Each band is its own compressor or expander and acts only on its own frequencies:
 
@@ -113,6 +113,16 @@ Two controls decide what a band does: **MODE** (Compress or Expand) and the sign
   - expanding at 4:1, a level 10 dB past the threshold changes by 30 dB
 - **Range** always caps the gain change. Range 0 switches the band's dynamics off; only its GAIN remains.
 
+**Limiting and gating.** Turn RATIO all the way up to **Inf:1**:
+
+![A band at Inf:1: limiting](../screenshot-limiter.png)
+
+- **Limiter:** COMPRESS with a negative range. Nothing in the band passes the threshold. Use the fastest attack and 2–5 ms of LOOKAHEAD so the band is already down when a peak arrives. Within its band it holds the level to within about 1 dB of the threshold (dynamic phase: exactly). Energy outside the band, such as the click of a hard onset, passes untouched, as with any multiband processor.
+- **Gate:** EXPAND with a negative range. The full range applies the moment the level drops below the threshold, and the band passes untouched above it. A fast attack opens it instantly.
+- **How deep a band can cut** in LINEAR PHASE and MINIMUM PHASE depends on its SLOPE, because neighbouring frequencies leak through the band edges: about 32 dB at 24 dB/oct, the full 48 dB at 48 dB/oct. DYNAMIC PHASE reaches the full range at any slope.
+
+See the *Three-Band Limiter* and *Multiband Drum Gate* presets.
+
 The transfer curve in the band panel draws the band's input/output curve and names its behaviour underneath.
 
 ---
@@ -123,7 +133,7 @@ The transfer curve in the band panel draws the band's input/output curve and nam
 |---|---|---|
 | **THRESHOLD** | −80 – 0 dB | Where the band starts to act. |
 | **RANGE** | −48 – +48 dB | The most gain change the band may apply. Negative cuts, positive boosts. |
-| **RATIO** | 1:1 – 100:1 | How strongly the band acts past the threshold. |
+| **RATIO** | 1:1 – Inf:1 | How strongly the band acts past the threshold. The top position is infinite: a limiter when compressing, a gate when expanding. |
 | **KNEE** | 0 – 30 dB | How gradually the band eases in around the threshold. |
 | **LOW / HIGH** | 10 Hz – 30 kHz | The band's edges. At the ends of the range the band becomes a shelf. |
 | **ATTACK** | 0.01 – 250 ms | How fast the gain change moves away from 0 dB. |
@@ -247,13 +257,13 @@ Expert, the analyzer settings and the display range are view settings: they are 
 
 ## 13. Presets
 
-39 factory presets in seven groups, plus your own:
+41 factory presets in seven groups, plus your own:
 
 | Group | Presets |
 |---|---|
-| Mastering | Four Band Master, Gentle Glue, Tame Harshness, Low End Control, Air Lift, Mid/Side Master |
+| Mastering | Four Band Master, Gentle Glue, Tame Harshness, Low End Control, Air Lift, Mid/Side Master, Three-Band Limiter |
 | Mix Bus | Bus Punch, De‑Mud, Upward Detail, Side Cleanup, Full Four‑Way |
-| Drums | Kick Tight, Snare Snap, Room Tamer, Overheads Smooth, Drum Bus Weight, Kick Ducks Bass (SC) |
+| Drums | Kick Tight, Snare Snap, Room Tamer, Overheads Smooth, Drum Bus Weight, Kick Ducks Bass (SC), Multiband Drum Gate |
 | Vocals | De‑Esser, Vocal Body, Breath Control, Presence Up, Plosive Guard |
 | Bass & Keys | Bass Even, Sub Focus, Piano Tamer, Pad Widener, Guitar Fizz |
 | Repair | Hum Gate, Hiss Gate, Resonance Snuff, Rumble Control, Sibilance (Side) |
@@ -289,6 +299,8 @@ Presets are starting points. Thresholds depend on how loud your material is, so 
 - **Tighter drums:** downward expansion (Expand, negative range) on the low mids with a fast attack shortens the ring of a kick or toms.
 - **Duck the bass with the kick:** a low band with SIDECHAIN EXTERNAL and the kick on the sidechain input (see *Kick Ducks Bass*).
 - **Parallel multiband:** heavy settings, global MIX at 30–50%.
+- **Multiband limiting:** three bands snapped together, COMPRESS at Inf:1, range −24 dB, fastest attack, 5 ms lookahead, thresholds just under the loudest peaks of each band (see *Three-Band Limiter*). Follow it with a true-peak limiter for the final ceiling.
+- **Multiband gate:** EXPAND at Inf:1, range −30 to −40 dB, 48 dB/oct slopes, very fast attack, release 50–100 ms; set each band's threshold between its hits and its bleed (see *Multiband Drum Gate*).
 
 ---
 
@@ -329,7 +341,7 @@ There are 136 parameters: 132 automatable controls and 4 view settings. New para
   - Enabled, Bypass, Solo
   - Low Frequency, High Frequency (10 Hz – 30 kHz), Slope (6–48 dB/oct)
   - Mode (Compress/Expand)
-  - Threshold (−80 – 0 dB), Range (±48 dB), Ratio (1–100), Knee (0–30 dB)
+  - Threshold (−80 – 0 dB), Range (±48 dB), Ratio (1–100; 100 is Inf:1), Knee (0–30 dB)
   - Attack (0.01–250 ms), Release (5 ms – 5 s), Lookahead (0–20 ms)
   - Gain (±30 dB), Stereo Link (0–100%)
   - Stereo Mode (Stereo/Mid/Side), Sidechain (Internal/External)

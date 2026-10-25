@@ -153,7 +153,24 @@ int main() {
           for (int b = 0; b < 6; ++b) { band(*e, b, x[b], x[b + 1], -10, 4, -24); e->p[bp(b, kBSlope)] = (float)sl; }
           worst = std::max(worst, std::fabs(gainAt(*e, hz, -30))); }
       check(worst < 0.05, "minimum phase, six contiguous idle bands, slopes 6-48 dB/oct: flat within %.3f dB", worst); }
-    // 20. presets load and stay finite
+    // 20. limiting: compress at Inf:1 with look-ahead holds the band at the threshold (smooth 2 ms onset, so the energy is in the band)
+    for (int m = 0; m < 3; ++m) {
+        EP e = make(m); band(*e, 0, 300, 3000, -20, 100, -48); e->p[bp(0, kBAttack)] = 0.01f; e->p[bp(0, kBLookahead)] = 5; e->p[bp(0, kBRelease)] = 100; e->setSampleRate(fs);
+        V in(N); for (int i = 0; i < N; ++i) in[i] = (i >= 48000 ? dbToGain(-6) * std::min(1.f, (i - 48000) / 96.f) : 0.f) * std::sin(2 * kPi * 1000 * i / fs);
+        V L, R; run(*e, in, in, L, R); const int lat = (int)e->latency();
+        const double onset = peakDb(L, 48000 + lat, 48000 + lat + 960), steady = toneDb(L, 1000, 72000, N);
+        check(onset < -18.5 && std::fabs(steady + 20) < 1.0, "limiting, Inf:1, 5 ms look-ahead, 14 dB over: first 20 ms peak %.1f dB, steady %.2f dB (threshold -20)", onset, steady);
+        printf("        (%s)\n", modeName(m)); }
+    { EP a = make(); band(*a, 0, 300, 3000, -20, 100, -48); const double inf = gainAt(*a, 1000, 0);
+      EP b = make(); band(*b, 0, 300, 3000, -20, 50, -48); const double fifty = gainAt(*b, 1000, 0);
+      check(std::fabs(inf + 20) < 0.3 && std::fabs(fifty + 19.6) < 0.3, "Inf:1 holds a tone 20 dB over the threshold to it (%.2f dB); 50:1 lets 0.4 dB through (%.2f dB)", inf, fifty); }
+    // 21. gating: expand at Inf:1 turns a band under the threshold down by the full range and leaves it alone above
+    for (int m = 0; m < 3; ++m) {
+        auto gate = [&](float db) { EP e = make(m); band(*e, 0, 300, 3000, -30, 100, -48, 0, kExpand); e->p[bp(0, kBSlope)] = 7; e->p[bp(0, kBAttack)] = 0.01f; return gainAt(*e, 1000, db); };
+        const double under = gate(-40), over = gate(-25);
+        check(under < -45 && std::fabs(over) < 0.1, "gating, Inf:1, range -48 dB, 48 dB/oct band: 10 dB under %.1f dB, 5 dB over %.2f dB", under, over);
+        printf("        (%s)\n", modeName(m)); }
+    // 22. presets load and stay finite
     { bool ok = true; for (uint32_t i = 0; i < kNumPresets; ++i) { EP e = make(); std::copy(presets()[i].v, presets()[i].v + kParamCount, e->p); const double g = gainAt(*e, 1000, -12, 24000); ok &= std::isfinite(g); }
       check(ok, "all %.0f presets produce finite output", kNumPresets); }
     printf("\n%s (%d failure%s)\n", fails ? "FAILED" : "ALL PASSED", fails, fails == 1 ? "" : "s");

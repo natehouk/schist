@@ -120,15 +120,22 @@ inline float pastKnee(float d, float K) {
     const float t = d + 0.5f * K; return t * t / (2.f * K);
 }
 // gain change in dB for a detected level. range < 0 works downward (cuts), range > 0 upward (boosts)
+// The top of the ratio range (100) is infinite: compressing, nothing passes the threshold (limiting);
+// expanding, the full range applies as soon as the level crosses it (gating).
+static constexpr float kRatioInf = 99.95f;
+inline bool ratioIsInf(float ratio) { return ratio >= kRatioInf; }
 inline float gainChange(float lvl, float thr, float ratio, float knee, int mode, float range) {
     if (std::fabs(range) < 1e-4f) return 0.f;
     ratio = std::max(ratio, 1.f);
+    const bool inf = ratioIsInf(ratio);
     if (mode == kCompress) {
-        if (range < 0) return std::max(-pastKnee(lvl - thr, knee) * (1.f - 1.f / ratio), range);   // loud parts down
-        return std::min(pastKnee(thr - lvl, knee) * (1.f - 1.f / ratio), range);                  // quiet parts up
+        const float k = inf ? 1.f : 1.f - 1.f / ratio;
+        if (range < 0) return std::max(-pastKnee(lvl - thr, knee) * k, range);   // loud parts down
+        return std::min(pastKnee(thr - lvl, knee) * k, range);                  // quiet parts up
     }
-    if (range < 0) return std::max(-pastKnee(thr - lvl, knee) * (ratio - 1.f), range);            // quiet parts down (gate)
-    return std::min(pastKnee(lvl - thr, knee) * (ratio - 1.f), range);                            // loud parts up
+    const float k = inf ? 1e4f : ratio - 1.f;
+    if (range < 0) return std::max(-pastKnee(thr - lvl, knee) * k, range);      // quiet parts down (gate)
+    return std::min(pastKnee(lvl - thr, knee) * k, range);                      // loud parts up
 }
 // the static curve the UI draws: output level for an input level
 inline float staticOut(float lvl, float thr, float ratio, float knee, int mode, float range) { return lvl + gainChange(lvl, thr, ratio, knee, mode, range); }

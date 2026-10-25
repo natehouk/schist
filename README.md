@@ -59,8 +59,10 @@ xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/*/Schist*
   | Compress | downward compression | upward compression |
   | Expand | gating | upward expansion |
 
+  At **Inf:1** a compressing band becomes a limiter and an expanding band a gate.
+
 - **Per band:**
-  - threshold, range (±48 dB), ratio (to 100:1) and soft knee
+  - threshold, range (±48 dB), ratio (1:1 to Inf:1) and soft knee
   - attack, release, and lookahead up to 20 ms
   - a static gain, stereo link, solo and bypass
   - slopes from 6 to 48 dB/oct
@@ -95,10 +97,12 @@ xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/*/Schist*
 - A/B with copy, undo/redo for every edit, MIDI Learn.
 - Smoothed, sample-accurate automation (132 parameters).
 - Resizable interface.
-- **39 factory presets** in seven categories, plus user presets.
+- **41 factory presets** in seven categories, plus user presets.
 - **Hover tips** everywhere, a **HELP window**, and a **[full manual](docs/MANUAL.md)** (also in every release zip as `Schist-Manual.html`).
 
 ![Expert mode with a custom detection range](screenshot-expert.png)
+
+![A band at Inf:1: limiting](screenshot-limiter.png)
 
 ### Compared with FabFilter Pro-MB (2013)
 
@@ -107,6 +111,7 @@ xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/*/Schist*
 | Up to six freely placed bands; snap together into a crossover | ✓ plus shelf bands at either end |
 | Dynamic Phase, Linear Phase and Minimum Phase modes | ✓ |
 | Compression and expansion, downward and upward | ✓ |
+| Limiting (compress, fast attack) and gating (expand, high ratio and range) | ✓ Inf:1 ratio; tested to hold within 1 dB of the threshold and to gate the full range |
 | Threshold, range, ratio, knee, attack, release, output gain, stereo link per band | ✓ |
 | Lookahead up to 20 ms | ✓ per band (fixed 20 ms latency when used) |
 | Intelligent program- and frequency-dependent timing | ✓ |
@@ -117,7 +122,7 @@ xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/*/Schist*
 | Mix 0–200%, output level and pan | ✓ |
 | Solo and bypass per band | ✓ |
 | MIDI Learn, undo/redo, A/B, smoothed parameters, help | ✓ hover tips, help pages and full manual |
-| Factory presets | 39 factory presets plus user presets |
+| Factory presets | 41 factory presets plus user presets |
 | Stereo and mono versions | Stereo |
 | Pro Tools (RTAS/AAX/AudioSuite) | Not supported (needs Avid's SDK and signing) |
 
@@ -131,7 +136,7 @@ make -C plugins/Schist                    # Linux / macOS (macOS also builds the
 make -C plugins/Schist WINDOWS=true CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
 ```
 
-GitHub Actions builds all three platforms on every push. The macOS build is universal and ad-hoc signed. A `v*` tag, or a release published on GitHub, attaches the zips to that release.
+GitHub Actions builds all three platforms on every push. The macOS build is universal. It is signed and notarized when the Developer ID secrets are set (`MACOS_CERT_P12`, `MACOS_CERT_PASSWORD`, `NOTARY_KEY`, `NOTARY_KEY_ID`, `NOTARY_ISSUER`), and ad-hoc signed otherwise. A `v*` tag, or a release published on GitHub, attaches the zips to that release.
 
 ## Tests
 
@@ -139,7 +144,8 @@ GitHub Actions builds all three platforms on every push. The macOS build is univ
 cd tests
 g++ -O2 -std=c++11 features.cpp -o features && ./features   # transparency in all modes, exact wire when idle, latency, compression/expansion
                                                             # in both directions, range, knee, isolation, attack/release, lookahead, mid/side,
-                                                            # external sidechain, custom detection, link, solo, bypass, mix, shelves, display
+                                                            # external sidechain, custom detection, link, solo, bypass, mix, shelves, display,
+                                                            # limiting and gating at Inf:1 in all three modes
 g++ -O2 -std=c++11 fuzz.cpp -o fuzz && ./fuzz               # random parameters and layouts at 44.1-192 kHz: always finite
 g++ -O2 -std=c++11 presets.cpp -o presets && ./presets      # plays a test mix (with a sidechain) through every preset
 g++ -O3 -std=c++11 bench.cpp -o bench && ./bench            # CPU per mode, oversampling and band count
@@ -173,6 +179,11 @@ Release checks:
 | `plugins/Schist/SchistPlugin.hpp/.cpp` | Plugin wrapper: parameters, sidechain, latency, MIDI Learn |
 | `plugins/Schist/SchistUI.cpp` | Custom vector interface (NanoVG) |
 | `docs/MANUAL.md` | User manual (`Schist-Manual.html` is generated from it with pandoc) |
+
+## Changelog
+
+- **2.0:** RATIO goes to Inf:1, so a band works as a true limiter (compress) or gate (expand); tested in all three processing modes. Two new presets: Three-Band Limiter and Multiband Drum Gate. Sessions and automation from 1.0 load unchanged (a ratio of 100:1 now means Inf:1).
+- **1.0:** First release.
 
 ## License
 
