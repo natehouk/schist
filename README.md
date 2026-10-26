@@ -98,6 +98,7 @@ xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/*/Schist*
 - Smoothed, sample-accurate automation (132 parameters).
 - Resizable interface.
 - **41 factory presets** in seven categories, plus user presets.
+- The preset browser **searches** names and categories as you type, and a star keeps a preset in **Favourites**.
 - **Hover tips** everywhere, a **HELP window**, and a **[full manual](docs/MANUAL.md)** (also in every release zip as `Schist-Manual.html`).
 
 ![Expert mode with a custom detection range](screenshot-expert.png)
@@ -182,6 +183,7 @@ Release checks:
 
 ## Changelog
 
+- **Unreleased:** the preset browser searches names and categories as you type, and keeps Favourites.
 - **2.0:** RATIO goes to Inf:1, so a band works as a true limiter (compress) or gate (expand); tested in all three processing modes. Two new presets: Three-Band Limiter and Multiband Drum Gate. Sessions and automation from 1.0 load unchanged (a ratio of 100:1 now means Inf:1).
 - **1.0:** First release.
 

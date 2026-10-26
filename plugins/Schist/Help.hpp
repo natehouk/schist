@@ -63,7 +63,7 @@ inline const char* targetTip(int t) {
     case kTipA: case kTipB: return "Schist keeps two complete settings, A and B. Click the other letter to switch and compare.";
     case kTipCopy: return "Copies the current setting to the other slot.";
     case kTipPrev: return "Load the previous preset. The mouse wheel over the preset name also steps through presets.";
-    case kTipPresets: return "Open the preset browser. A * after the name means you have changed it.";
+    case kTipPresets: return "Open the preset browser. A * after the name means you have changed it. In the browser, type to search names and categories, and click a star to keep a preset in Favourites.";
     case kTipNext: return "Load the next preset.";
     case kTipDisplay: return "Double-click to create a band here (up to six). The white line is the gain the whole plugin applies right now; behind it is the spectrum.";
     case kTipBand: return "Drag sideways to move the band, up or down to change its range. Mouse wheel: threshold. Click to select it, right-click to remove it. The coloured fill shows the gain change right now; the faint outline shows the full range.";
