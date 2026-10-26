@@ -183,7 +183,7 @@ Release checks:
 
 ## Changelog
 
-- **Unreleased:** the preset browser searches names and categories as you type, and keeps Favourites.
+- **2.1:** the preset browser searches names and categories as you type, and keeps Favourites.
 - **2.0:** RATIO goes to Inf:1, so a band works as a true limiter (compress) or gate (expand); tested in all three processing modes. Two new presets: Three-Band Limiter and Multiband Drum Gate. Sessions and automation from 1.0 load unchanged (a ratio of 100:1 now means Inf:1).
 - **1.0:** First release.
 

@@ -1,4 +1,4 @@
-# Schist 2.0 — User Manual
+# Schist 2.1 — User Manual
 
 Schist is a multiband dynamics processor. You place up to six bands anywhere in the spectrum, with gaps between them or snapped together like a classic crossover. Each band is its own compressor or expander and acts only on its own frequencies:
 

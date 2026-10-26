@@ -319,7 +319,7 @@ protected:
         beginPath(); circle(37, 26, 1.4f); fillColor(Color(0xf4, 0xf0, 0xe2)); fill();
         fontSize(22); textLetterSpacing(9); fillColor(C_TEXT); textAlign(ALIGN_LEFT | ALIGN_MIDDLE); text(56, 33, "SCHIST", nullptr);
         fontSize(9); textLetterSpacing(2.2f); fillColor(C_DIM); text(204, 28, "MULTIBAND DYNAMICS", nullptr);
-        fontSize(7); textLetterSpacing(1.1f); fillColor(C_FAINT); text(204, 40, "EPSILON AUDIO 2.0", nullptr);
+        fontSize(7); textLetterSpacing(1.1f); fillColor(C_FAINT); text(204, 40, "EPSILON AUDIO 2.1", nullptr);
         drawPresetBar();
         for (int k = 0; k < 2; ++k) {
             const float x = A_X + k * AB_W; const bool on = abSlot == k, hot = hoverHeader == 6 + k;
